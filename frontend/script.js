@@ -99,7 +99,7 @@ document.getElementById('validate-form').addEventListener('submit', async (e) =>
     Object.keys(data).forEach(key => {
         if (['vehicle_type', 'police_station', 'junction_name', 'pincode'].includes(key)) {
             // Keep these as strings
-        } else if (key.startsWith('violation_') || key.startsWith('loc_has_') || key === 'is_weekend') {
+        } else if (key.startsWith('violation_') || key.startsWith('loc_has_') || key.startsWith('is_') || key === 'has_multiple_violations') {
             data[key] = parseInt(data[key]);
         } else {
             data[key] = parseFloat(data[key]);

@@ -320,6 +320,73 @@
                         </div>
                     </div>
 
+                    <div class="form-section">
+                        <h3>Enhanced Features</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Distance from Center</label>
+                                <input type="number" step="any" name="dist_from_center" value="0.05" required>
+                            </div>
+                            <div class="form-group">
+                                <label>User Report Count</label>
+                                <input type="number" name="user_report_count" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Report Gap (Hours)</label>
+                                <input type="number" step="any" name="last_report_gap_hours" value="0.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Device Report Count</label>
+                                <input type="number" name="device_report_count" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Pincode Report Density</label>
+                                <input type="number" name="pincode_report_density" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Has Multiple Violations (0/1)</label>
+                                <select name="has_multiple_violations">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Hour x Weekend</label>
+                                <input type="number" name="hour_x_weekend" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Lat x Lon</label>
+                                <input type="number" step="any" name="lat_x_lon" value="1005.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hour Sin x Cos</label>
+                                <input type="number" step="any" name="hour_sin_x_cos" value="0.433" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Police Station Activity</label>
+                                <input type="number" name="police_station_activity" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Junction Complexity</label>
+                                <input type="number" name="junction_complexity" value="2" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Is Morning Peak (0/1)</label>
+                                <select name="is_morning_peak">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Is Evening Peak (0/1)</label>
+                                <select name="is_evening_peak">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn-primary">Validate Report</button>
                 </form>
 
