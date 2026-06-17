@@ -37,7 +37,7 @@ ENV/
 
 # Data files (large datasets)
 *.csv
-*.json
+
 *.parquet
 *.xlsx
 
