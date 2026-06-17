@@ -36,7 +36,7 @@ except Exception as e:
         'user_target_enc', 'device_target_enc'
     ]
 
-# Model 1 features (42 features)
+# Model 1 features (55 features - enhanced model)
 model_m1_features = [
     'latitude', 'longitude', 'vehicle_type', 'description', 'center_code',
     'police_station', 'junction_name', 'violation_wrong_parking', 'violation_no_parking',
@@ -50,7 +50,12 @@ model_m1_features = [
     'hour', 'dayofweek', 'month', 'minute', 'is_weekend', 'hour_sin', 'hour_cos',
     'pincode', 'loc_has_metro', 'loc_has_cross', 'loc_has_road', 'loc_has_near',
     'loc_has_opp', 'vehicle_type_freq', 'police_station_freq', 'junction_name_freq',
-    'pincode_freq', 'user_target_enc', 'device_target_enc'
+    'pincode_freq', 'user_target_enc', 'device_target_enc',
+    # Enhanced features
+    'dist_from_center', 'user_report_count', 'last_report_gap_hours',
+    'device_report_count', 'pincode_report_density', 'has_multiple_violations',
+    'hour_x_weekend', 'lat_x_lon', 'hour_sin_x_cos', 'police_station_activity',
+    'junction_complexity', 'is_morning_peak', 'is_evening_peak'
 ]
 
 # Load production models
@@ -63,7 +68,7 @@ except Exception as e:
     model_m1 = None
     model_m3 = None
 
-# Define request schema for validation (Model 1 - 42 features)
+# Define request schema for validation (Model 1 - 55 features)
 class ValidationReport(BaseModel):
     latitude: float
     longitude: float
@@ -107,6 +112,20 @@ class ValidationReport(BaseModel):
     pincode_freq: float
     user_target_enc: float = 0.70
     device_target_enc: float = 0.70
+    # Enhanced features
+    dist_from_center: float = 0.0
+    user_report_count: int = 0
+    last_report_gap_hours: float = 0.0
+    device_report_count: int = 0
+    pincode_report_density: int = 0
+    has_multiple_violations: int = 0
+    hour_x_weekend: int = 0
+    lat_x_lon: float = 0.0
+    hour_sin_x_cos: float = 0.0
+    police_station_activity: int = 0
+    junction_complexity: int = 0
+    is_morning_peak: int = 0
+    is_evening_peak: int = 0
 
 # Define request schema for priority prediction (Model 3 - ambient features)
 class PriorityReport(BaseModel):
@@ -212,7 +231,7 @@ def validate_report(report: ValidationReport):
         raise HTTPException(status_code=503, detail="Validation model not loaded")
 
     try:
-        # Create input DataFrame with all 42 features
+        # Create input DataFrame with all 55 features
         input_data = pd.DataFrame([{
             'latitude': report.latitude,
             'longitude': report.longitude,
@@ -255,7 +274,21 @@ def validate_report(report: ValidationReport):
             'junction_name_freq': report.junction_name_freq,
             'pincode_freq': report.pincode_freq,
             'user_target_enc': report.user_target_enc,
-            'device_target_enc': report.device_target_enc
+            'device_target_enc': report.device_target_enc,
+            # Enhanced features
+            'dist_from_center': report.dist_from_center,
+            'user_report_count': report.user_report_count,
+            'last_report_gap_hours': report.last_report_gap_hours,
+            'device_report_count': report.device_report_count,
+            'pincode_report_density': report.pincode_report_density,
+            'has_multiple_violations': report.has_multiple_violations,
+            'hour_x_weekend': report.hour_x_weekend,
+            'lat_x_lon': report.lat_x_lon,
+            'hour_sin_x_cos': report.hour_sin_x_cos,
+            'police_station_activity': report.police_station_activity,
+            'junction_complexity': report.junction_complexity,
+            'is_morning_peak': report.is_morning_peak,
+            'is_evening_peak': report.is_evening_peak
         }])
 
         # Convert categorical columns to category type
