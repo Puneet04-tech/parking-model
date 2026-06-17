@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Intelligence API</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Parking Intelligence</h1>
+            <p>AI-powered parking violation validation and congestion priority prediction</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="priority">Priority Prediction</button>
+            <button class="tab-btn" data-tab="validate">Report Validation</button>
+        </div>
+
+        <!-- Priority Prediction Tab -->
+        <div id="priority-tab" class="tab-content active">
+            <div class="card">
+                <h2>🎯 Predict Enforcement Priority</h2>
+                <p>Enter location and time details to predict congestion impact and enforcement priority.</p>
+                
+                <form id="priority-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="number" step="any" name="latitude" value="12.9782" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="number" step="any" name="longitude" value="77.6011" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Hour (0-23)</label>
+                            <input type="number" name="hour" min="0" max="23" value="17" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Day of Week (0-6)</label>
+                            <input type="number" name="dayofweek" min="0" max="6" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Is Weekend (0/1)</label>
+                            <select name="is_weekend" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Month (1-12)</label>
+                            <input type="number" name="month" min="1" max="12" value="6" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Police Station Frequency</label>
+                            <input type="number" step="any" name="police_station_freq" value="1500.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pincode Frequency</label>
+                            <input type="number" step="any" name="pincode_freq" value="800.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Junction Frequency</label>
+                            <input type="number" step="any" name="junction_name_freq" value="500.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>User Target Encoding</label>
+                            <input type="number" step="any" name="user_target_enc" value="0.85" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Device Target Encoding</label>
+                            <input type="number" step="any" name="device_target_enc" value="0.90" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Predict Priority</button>
+                </form>
+
+                <div id="priority-result" class="result hidden">
+                    <h3>Prediction Result</h3>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="label">Priority:</span>
+                            <span class="value priority" id="priority-value"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="label">Confidence:</span>
+                            <span class="value" id="confidence-value"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="label">Action:</span>
+                            <span class="value action" id="action-value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Validation Tab -->
+        <div id="validate-tab" class="tab-content">
+            <div class="card">
+                <h2>✅ Validate Parking Report</h2>
+                <p>Check if a parking violation report is legitimate or should be rejected.</p>
+                
+                <form id="validate-form">
+                    <div class="form-section">
+                        <h3>Location & Time</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Latitude</label>
+                                <input type="number" step="any" name="latitude" value="12.9782" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Longitude</label>
+                                <input type="number" step="any" name="longitude" value="77.6011" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hour (0-23)</label>
+                                <input type="number" name="hour" min="0" max="23" value="17" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Minute</label>
+                                <input type="number" name="minute" min="0" max="59" value="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Day of Week (0-6)</label>
+                                <input type="number" name="dayofweek" min="0" max="6" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Is Weekend (0/1)</label>
+                                <select name="is_weekend" required>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Month (1-12)</label>
+                                <input type="number" name="month" min="1" max="12" value="6" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hour Sin</label>
+                                <input type="number" step="any" name="hour_sin" value="0.5" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hour Cos</label>
+                                <input type="number" step="any" name="hour_cos" value="0.866" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Vehicle & Location Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Vehicle Type</label>
+                                <input type="text" name="vehicle_type" value="Car" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Center Code</label>
+                                <input type="number" step="any" name="center_code" value="100.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Police Station</label>
+                                <input type="text" name="police_station" value="Station1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Junction Name</label>
+                                <input type="text" name="junction_name" value="MG Road" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Pincode</label>
+                                <input type="text" name="pincode" value="560001" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="number" step="any" name="description" value="0.0" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Violation Types</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Wrong Parking</label>
+                                <input type="number" name="violation_wrong_parking" value="1" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>No Parking</label>
+                                <input type="number" name="violation_no_parking" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Parking in Main Road</label>
+                                <input type="number" name="violation_parking_in_a_main_road" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Defective Number Plate</label>
+                                <input type="number" name="violation_defective_number_plate" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Parking on Footpath</label>
+                                <input type="number" name="violation_parking_on_footpath" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Near Busstop/School</label>
+                                <input type="number" name="violation_parking_near_bustop_school_hospital_etc" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Double Parking</label>
+                                <input type="number" name="violation_double_parking" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Near Road Crossing</label>
+                                <input type="number" name="violation_parking_near_road_crossing" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Refuse to Hire</label>
+                                <input type="number" name="violation_refuse_to_go_for_hire" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Near Traffic Light</label>
+                                <input type="number" name="violation_parking_near_traffic_light_or_zebra_cross" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Opposite Parked Vehicle</label>
+                                <input type="number" name="violation_parking_opposite_to_another_parked_vehicle" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Black Film/Materials</label>
+                                <input type="number" name="violation_using_black_film_other_materials" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Other Than Bus Stop</label>
+                                <input type="number" name="violation_parking_other_than_bus_stop" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Demanding Excess Fare</label>
+                                <input type="number" name="violation_demanding_excess_fare" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Without Side Mirror</label>
+                                <input type="number" name="violation_without_side_mirror" value="0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Violation Count</label>
+                                <input type="number" name="violation_count" value="1" min="1" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Location Features</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Has Metro (0/1)</label>
+                                <select name="loc_has_metro">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Has Cross (0/1)</label>
+                                <select name="loc_has_cross">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Has Road (0/1)</label>
+                                <select name="loc_has_road">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Has Near (0/1)</label>
+                                <select name="loc_has_near">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Has Opp (0/1)</label>
+                                <select name="loc_has_opp">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Frequency Encodings</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Vehicle Type Freq</label>
+                                <input type="number" step="any" name="vehicle_type_freq" value="5000.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Police Station Freq</label>
+                                <input type="number" step="any" name="police_station_freq" value="1500.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Junction Freq</label>
+                                <input type="number" step="any" name="junction_name_freq" value="800.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Pincode Freq</label>
+                                <input type="number" step="any" name="pincode_freq" value="3000.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>User Target Enc</label>
+                                <input type="number" step="any" name="user_target_enc" value="0.85" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Device Target Enc</label>
+                                <input type="number" step="any" name="device_target_enc" value="0.90" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Validate Report</button>
+                </form>
+
+                <div id="validate-result" class="result hidden">
+                    <h3>Validation Result</h3>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="label">Status:</span>
+                            <span class="value status" id="validation-status"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="label">Confidence:</span>
+                            <span class="value" id="validation-confidence"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-section">
+            <h3>API Status</h3>
+            <div id="api-status">
+                <span class="status-indicator"></span>
+                <span id="status-text">Checking...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
