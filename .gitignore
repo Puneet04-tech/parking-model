@@ -34,11 +34,6 @@ ENV/
 *.swo
 *~
 
-# Model files (large binary files)
-*.joblib
-*.pkl
-*.h5
-*.pt
 
 # Data files (large datasets)
 *.csv
