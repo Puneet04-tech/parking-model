@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Technical Documentation - Parking Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f0f23;
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 50px 0 20px 0;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 30px 0 15px 0;
+            color: #a8a8a8;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            color: #888;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+            color: #ccc;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        code {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #667eea;
+        }
+
+        pre {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e0e0e0;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .cell-explanation {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .cell-explanation h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .feature-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .endpoint {
+            background: rgba(118, 75, 162, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #764ba2;
+        }
+
+        .endpoint h4 {
+            color: #764ba2;
+            margin-bottom: 15px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .metric-label {
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .toc {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .toc h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .feature-list,
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Backend Technical Documentation</h1>
+    <p>Parking Intelligence API - Complete ML Pipeline and Architecture</p>
+
+    <div class="toc">
+        <h3>Table of Contents</h3>
+        <ul>
+            <li><a href="#overview">System Overview</a></li>
+            <li><a href="#architecture">Backend Architecture</a></li>
+            <li><a href="#fastapi">FastAPI Application</a></li>
+            <li><a href="#ml-pipeline">ML Pipeline - Notebook Cells</a></li>
+            <li><a href="#model1">Model 1: Report Validator</a></li>
+            <li><a href="#model3">Model 3: Priority Predictor</a></li>
+            <li><a href="#features">Feature Engineering</a></li>
+            <li><a href="#deployment">Deployment</a></li>
+        </ul>
+    </div>
+
+    <div class="section" id="overview">
+        <h2>System Overview</h2>
+        <p>The Parking Intelligence backend consists of a machine learning pipeline that processes parking violation data, trains predictive models, and serves them through a FastAPI REST API. The system uses LightGBM for model training, advanced feature engineering for data preparation, and semi-supervised learning to leverage unlabeled data.</p>
+        
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value">2</div>
+                <div class="metric-label">ML Models</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">55</div>
+                <div class="metric-label">Features (Model 1)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">11</div>
+                <div class="metric-label">Features (Model 3)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">165k+</div>
+                <div class="metric-label">Training Reports</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="architecture">
+        <h2>Backend Architecture</h2>
+        <p>The backend follows a modular architecture with clear separation between data processing, model training, and inference serving:</p>
+        
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>Data Layer</h4>
+                <p>CSV data ingestion, cleaning, and feature engineering pipeline</p>
+            </div>
+            <div class="feature-item">
+                <h4>ML Layer</h4>
+                <p>LightGBM models with hyperparameter tuning and semi-supervised learning</p>
+            </div>
+            <div class="feature-item">
+                <h4>API Layer</h4>
+                <p>FastAPI with CORS, error handling, and automatic documentation</p>
+            </div>
+            <div class="feature-item">
+                <h4>Deployment Layer</h4>
+                <p>Render for hosting, Git for version control, netlify for frontend</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="fastapi">
+        <h2>FastAPI Application (app.py)</h2>
+        
+        <div class="endpoint">
+            <h4>Application Initialization</h4>
+            <p>The FastAPI app is initialized with CORS middleware to allow cross-origin requests from the frontend. This is essential for the web interface to communicate with the API.</p>
+            <pre><code>app = FastAPI(
+    title="Parking Congestion Intelligence API",
+    description="Live inference engine for report validation and congestion priority dispatch.",
+    version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <h4>Model Loading</h4>
+            <p>Production models are loaded at startup using joblib. The system loads both Model 1 (validator) and Model 3 (prioritizer) along with the ambient features list for Model 3.</p>
+            <pre><code>model_m1 = joblib.load('model_report_validator.joblib')
+model_m3 = joblib.load('model_congestion_prioritizer.joblib')
+ambient_features = json.load(open('ambient_features.json'))</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <h4>Pydantic Schemas</h4>
+            <p>Two request schemas are defined for type safety and automatic validation:</p>
+            <ul>
+                <li><code>ValidationReport</code>: 55 features for full report validation</li>
+                <li><code>PriorityReport</code>: 11 features for quick priority assessment</li>
+            </ul>
+        </div>
+
+        <div class="endpoint">
+            <h4>GET / - Root Endpoint</h4>
+            <p>Health check endpoint that returns API status and model loading information.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4>GET /health - Health Check</h4>
+            <p>Detailed health check returning individual model status for monitoring.</p>
+        </div>
+
+        <div class="endpoint">
+            <h4>POST /predict_priority - Priority Prediction</h4>
+            <p>Accepts 11 ambient features and returns priority level (LOW/MEDIUM/HIGH) with confidence score. Uses Model 3 for inference.</p>
+            <pre><code>Input: latitude, longitude, hour, dayofweek, is_weekend, month, 
+       police_station_freq, pincode_freq, junction_name_freq, 
+       user_target_enc, device_target_enc
+Output: priority, confidence, enforcement_action</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <h4>POST /validate_report - Report Validation</h4>
+            <p>Accepts 55 features and returns validation status (APPROVED/REJECTED) with confidence. Uses Model 1 for inference with categorical column handling.</p>
+            <pre><code>Input: 55 features including location, time, violations, 
+       user behavior, enhanced features
+Output: validation_status, confidence</code></pre>
+        </div>
+    </div>
+
+    <div class="section" id="ml-pipeline">
+        <h2>ML Pipeline - Notebook Cells Explained</h2>
+        
+        <div class="cell-explanation">
+            <h4>Cell 1: Project Overview</h4>
+            <p><strong>Purpose:</strong> Documentation cell explaining the project scope and objectives.</p>
+            <p><strong>Content:</strong> Describes the three main components - automated report validation, spatial hotspot detection, and congestion priority modeling. Sets the context for the entire notebook.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 2: Library Imports</h4>
+            <p><strong>Purpose:</strong> Import all required Python libraries for data processing, ML, and visualization.</p>
+            <p><strong>Libraries:</strong></p>
+            <ul>
+                <li>pandas, numpy - Data manipulation</li>
+                <li>matplotlib, seaborn - Visualization</li>
+                <li>sklearn - Model evaluation and metrics</li>
+                <li>lightgbm - Gradient boosting models</li>
+                <li>joblib - Model serialization</li>
+                <li>DBSCAN - Spatial clustering</li>
+            </ul>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 3: Data Loading</h4>
+            <p><strong>Purpose:</strong> Load the parking violation dataset from CSV file.</p>
+            <p><strong>Functionality:</strong> Reads 298,450 rows with 24 columns including location, vehicle details, violation types, timestamps, and validation status. Displays dataset info and structure.</p>
+            <p><strong>Key Columns:</strong> latitude, longitude, vehicle_type, violation_type, created_datetime, police_station, junction_name, validation_status</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 4: Data Cleaning</h4>
+            <p><strong>Purpose:</strong> Handle missing values and filter spatial outliers.</p>
+            <p><strong>Operations:</strong></p>
+            <ul>
+                <li>Filters coordinates to Bangalore bounding box (lat: 12.8-13.3, lon: 77.4-77.8)</li>
+                <li>Fills missing location with 'UNKNOWN'</li>
+                <li>Fills missing center_code with -1</li>
+                <li>Fills missing police_station and junction_name</li>
+            </ul>
+            <p><strong>Rationale:</strong> Spatial filtering removes GPS errors and data from outside the city. Missing value handling ensures no nulls break the ML pipeline.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 5: Violation Type Parsing</h4>
+            <p><strong>Purpose:</strong> Parse JSON-formatted violation types and create binary indicators.</p>
+            <p><strong>Functionality:</strong></p>
+            <ul>
+                <li>Parses violation_type and offence_code JSON strings into lists</li>
+                <li>Identifies all 27 unique violation types in dataset</li>
+                <li>Creates binary indicators for top 15 most frequent violations</li>
+                <li>Counts total violations per report</li>
+            </ul>
+            <p><strong>Output:</strong> 15 new binary columns (e.g., violation_wrong_parking, violation_no_parking) and violation_count column.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 6: Temporal Feature Engineering</h4>
+            <p><strong>Purpose:</strong> Extract time-based features from timestamps.</p>
+            <p><strong>Features Created:</strong></p>
+            <ul>
+                <li>hour, dayofweek, month, minute - Extracted from datetime</li>
+                <li>is_weekend - Binary flag for weekends</li>
+                <li>hour_sin, hour_cos - Cyclic encoding for continuous time representation</li>
+                <li>pincode - Extracted from location text</li>
+                <li>loc_has_metro, loc_has_cross, loc_has_road, loc_has_near, loc_has_opp - Text-based location features</li>
+            </ul>
+            <p><strong>Rationale:</strong> Cyclic encoding captures that hour 23 and hour 0 are close in time. Text features capture location context without requiring geocoding.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 7: Frequency Encoding</h4>
+            <p><strong>Purpose:</strong> Convert high-cardinality categorical features to numeric using frequency counts.</p>
+            <p><strong>Features:</strong> vehicle_type_freq, police_station_freq, junction_name_freq, pincode_freq</p>
+            <p><strong>Method:</strong> Count occurrences of each category and map to frequency. Helps tree-based models learn density patterns.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 8: Target Encoding (OOF)</h4>
+            <p><strong>Purpose:</strong> Calculate user and device reliability scores using Out-of-Fold target encoding.</p>
+            <p><strong>Method:</strong></p>
+            <ul>
+                <li>Uses 5-fold cross-validation to prevent data leakage</li>
+                <li>Calculates approval rate for each user/device in training folds</li>
+                <li>Applies Laplace smoothing (smoothing factor = 10) to handle rare users/devices</li>
+                <li>Maps encodings back to full dataset with global mean as fallback</li>
+            </ul>
+            <p><strong>Output:</strong> user_target_enc, device_target_enc - Values between 0-1 indicating historical reliability.</p>
+            <p><strong>Importance:</strong> Captures reporter credibility without data leakage, crucial for identifying reliable vs. spam reporters.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 9: Model 1 Definition</h4>
+            <p><strong>Purpose:</strong> Define feature set and train initial Model 1 (Report Validator).</p>
+            <p><strong>Features:</strong> 42 features excluding leakage columns (updated_vehicle_*, validation_timestamp, etc.)</p>
+            <p><strong>Model:</strong> LightGBM classifier with regularization (reg_alpha=2.0, reg_lambda=10.0, max_depth=6)</p>
+            <p><strong>Training:</strong> 80-20 train-test split with stratification, early stopping after 30 rounds.</p>
+            <p><strong>Performance:</strong> 75.77% accuracy, 75.82% ROC-AUC on test set.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 10: Enhanced Feature Engineering</h4>
+            <p><strong>Purpose:</strong> Add 13 advanced features to improve Model 1 performance.</p>
+            <p><strong>New Features:</strong></p>
+            <ul>
+                <li>dist_from_center - Euclidean distance from Bangalore city center</li>
+                <li>user_report_count - Cumulative count of reports per user</li>
+                <li>last_report_gap_hours - Time since user's last report</li>
+                <li>device_report_count - Cumulative count per device</li>
+                <li>pincode_report_density - Reports in same pincode</li>
+                <li>has_multiple_violations - Binary flag for >1 violations</li>
+                <li>hour_x_weekend - Interaction between hour and weekend</li>
+                <li>lat_x_lon - Interaction between coordinates</li>
+                <li>hour_sin_x_cos - Interaction of cyclic time features</li>
+                <li>police_station_activity - Cumulative reports per station</li>
+                <li>junction_complexity - Word count in junction name</li>
+                <li>is_morning_peak - Binary for 8-10am</li>
+                <li>is_evening_peak - Binary for 5-7pm</li>
+            </ul>
+            <p><strong>Rationale:</strong> These features capture user behavior patterns, location complexity, and temporal interactions that improve model discrimination.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 11: Model 1 Retraining with Enhanced Features</h4>
+            <p><strong>Purpose:</strong> Retrain Model 1 with 55 features and class imbalance handling.</p>
+            <p><strong>Changes:</strong></p>
+            <ul>
+                <li>Updated to 55 features (42 original + 13 enhanced)</li>
+                <li>Added scale_pos_weight for class imbalance (negative_samples / positive_samples)</li>
+                <li>Increased model capacity (max_depth=8, num_leaves=63)</li>
+            </ul>
+            <p><strong>Performance:</strong> 73.58% accuracy, 79.98% ROC-AUC - improved ROC-AUC by 4.16% despite lower accuracy due to better class balance handling.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 12: Hyperparameter Tuning with Optuna</h4>
+            <p><strong>Purpose:</strong> Automated hyperparameter optimization to find best Model 1 configuration.</p>
+            <p><strong>Method:</strong></p>
+            <ul>
+                <li>Uses Optuna with TPE sampler for efficient search</li>
+                <li>Optimizes 9 hyperparameters: n_estimators, learning_rate, max_depth, num_leaves, min_child_samples, subsample, colsample_bytree, reg_alpha, reg_lambda</li>
+                <li>Uses 3-fold cross-validation for faster evaluation</li>
+                <li>Runs 40 trials to find optimal configuration</li>
+            </ul>
+            <p><strong>Output:</strong> Best parameters saved to model_report_validator_tuned.joblib</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 13: Semi-Supervised Learning (SSL)</h4>
+            <p><strong>Purpose:</strong> Leverage 125k+ unlabeled reports using pseudo-labeling to improve model performance.</p>
+            <p><strong>Method:</strong></p>
+            <ul>
+                <li>Uses enhanced Model 1 to predict labels for unlabeled data</li>
+                <li>Keeps high-confidence predictions (probability > 0.9 or < 0.1) as pseudo-labels</li>
+                <li>Combines labeled data (42k) with high-confidence pseudo-labeled data</li>
+                <li>Retrains model on combined dataset</li>
+            </ul>
+            <p><strong>Performance:</strong> Achieves 80.76% accuracy, 84.07% ROC-AUC - 5% improvement over supervised model.</p>
+            <p><strong>Importance:</strong> Dramatically increases training data without manual labeling, leveraging the large volume of unlabeled reports.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 14: Neural Network Comparison</h4>
+            <p><strong>Purpose:</strong> Compare LightGBM performance against TensorFlow neural network.</p>
+            <p><strong>Implementation:</strong> Multi-layer perceptron with 3 hidden layers, dropout for regularization.</p>
+            <p><strong>Result:</strong> LightGBM outperforms NN for this tabular data task. NN skipped if TensorFlow not installed.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 15: Ensemble Model</h4>
+            <p><strong>Purpose:</strong> Combine SSL model and NN (if available) for improved predictions.</p>
+            <p><strong>Method:</strong> Weighted averaging of predictions from multiple models.</p>
+            <p><strong>Performance:</strong> Final ensemble achieves 80.76% accuracy, 84.07% ROC-AUC.</p>
+        </div>
+
+        <div class="cell-explanation">
+            <h4>Cell 16: Model Export</h4>
+            <p><strong>Purpose:</strong> Export best model for production deployment.</p>
+            <p><strong>Exports:</strong></p>
+            <ul>
+                <li>model_report_validator.joblib - Best Model 1 (SSL model)</li>
+                <li>model_congestion_prioritizer.joblib - Model 3 (trained separately)</li>
+                <li>ambient_features.json - Feature list for Model 3</li>
+            </ul>
+            <p><strong>Rationale:</strong> Joblib serialization allows fast loading in FastAPI application.</p>
+        </div>
+    </div>
+
+    <div class="section" id="model1">
+        <h2>Model 1: Report Validator (Detailed)</h2>
+        
+        <h3>Purpose</h3>
+        <p>Binary classifier that determines if a parking violation report is legitimate (APPROVED) or should be rejected (REJECTED). This filters out spam and false reports before officers investigate.</p>
+        
+        <h3>Algorithm</h3>
+        <p>LightGBM (Light Gradient Boosting Machine) - a gradient boosting framework that uses tree-based learning algorithms.</p>
+        
+        <h3>Why LightGBM?</h3>
+        <ul>
+            <li>Fast training speed compared to other boosting algorithms</li>
+            <li>Handles categorical features natively</li>
+            <li>Good performance on tabular data</li>
+            <li>Memory efficient</li>
+            <li>Built-in regularization to prevent overfitting</li>
+        </ul>
+        
+        <h3>Feature Set (55 Features)</h3>
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>Spatial (4)</h4>
+                <p>latitude, longitude, dist_from_center, pincode</p>
+            </div>
+            <div class="feature-item">
+                <h4>Temporal (7)</h4>
+                <p>hour, dayofweek, month, minute, is_weekend, hour_sin, hour_cos</p>
+            </div>
+            <div class="feature-item">
+                <h4>Vehicle (3)</h4>
+                <p>vehicle_type, vehicle_type_freq, description</p>
+            </div>
+            <div class="feature-item">
+                <h4>Location (6)</h4>
+                <p>police_station, junction_name, center_code, loc_has_metro, loc_has_cross, loc_has_road, loc_has_near, loc_has_opp</p>
+            </div>
+            <div class="feature-item">
+                <h4>Violations (15)</h4>
+                <p>Binary indicators for 15 violation types + violation_count</p>
+            </div>
+            <div class="feature-item">
+                <h4>Frequency (4)</h4>
+                <p>police_station_freq, junction_name_freq, pincode_freq, vehicle_type_freq</p>
+            </div>
+            <div class="feature-item">
+                <h4>Target Encoding (2)</h4>
+                <p>user_target_enc, device_target_enc</p>
+            </div>
+            <div class="feature-item">
+                <h4>Behavioral (4)</h4>
+                <p>user_report_count, last_report_gap_hours, device_report_count, pincode_report_density</p>
+            </div>
+            <div class="feature-item">
+                <h4>Interaction (3)</h4>
+                <p>hour_x_weekend, lat_x_lon, hour_sin_x_cos</p>
+            </div>
+            <div class="feature-item">
+                <h4>Complexity (2)</h4>
+                <p>police_station_activity, junction_complexity</p>
+            </div>
+            <div class="feature-item">
+                <h4>Peak Hours (2)</h4>
+                <p>is_morning_peak, is_evening_peak</p>
+            </div>
+        </div>
+        
+        <h3>Training Process</h3>
+        <ol>
+            <li><strong>Data Preparation:</strong> Filter labeled reports (approved/rejected), convert categorical columns to category dtype</li>
+            <li><strong>Feature Engineering:</strong> Apply all 55 features with proper data types</li>
+            <li><strong>Train-Test Split:</strong> 80-20 split with stratification to maintain class balance</li>
+            <li><strong>Class Imbalance:</strong> Calculate scale_pos_weight = negative_samples / positive_samples</li>
+            <li><strong>Model Training:</strong> LightGBM with 500 estimators, early stopping after 50 rounds</li>
+            <li><strong>Semi-Supervised:</strong> Add high-confidence pseudo-labels from unlabeled data</li>
+            <li><strong>Final Training:</strong> Retrain on combined labeled + pseudo-labeled dataset</li>
+        </ol>
+        
+        <h3>Hyperparameters</h3>
+        <pre><code>n_estimators: 500
+learning_rate: 0.03
+max_depth: 8
+num_leaves: 63
+min_child_samples: 20
+subsample: 0.8
+colsample_bytree: 0.8
+reg_alpha: 1.5
+reg_lambda: 8.0
+scale_pos_weight: 0.43 (calculated from class imbalance)</code></pre>
+        
+        <h3>Performance Metrics</h3>
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value">80.76%</div>
+                <div class="metric-label">Accuracy</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">84.07%</div>
+                <div class="metric-label">ROC-AUC</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">165k+</div>
+                <div class="metric-label">Training Samples</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="model2">
+        <h2>Model 2: Spatial Hotspot Detector (Detailed)</h2>
+        
+        <h3>Purpose</h3>
+        <p>DBSCAN (Density-Based Spatial Clustering of Applications with Noise) clustering algorithm that identifies chronic violation zones and spatial hotspots. This helps officers understand where violations are concentrated and plan patrol routes more effectively.</p>
+        
+        <h3>Algorithm</h3>
+        <p>DBSCAN is a density-based clustering algorithm that groups points that are closely packed together while marking points in low-density regions as outliers.</p>
+        
+        <h3>Why DBSCAN?</h3>
+        <ul>
+            <li><strong>No Predefined Clusters:</strong> Unlike K-means, DBSCAN doesn't require specifying the number of clusters in advance</li>
+            <li><strong>Handles Arbitrary Shapes:</strong> Can discover clusters of any shape, not just spherical</li>
+            <li><strong>Noise Detection:</strong> Automatically identifies and filters outliers as noise</li>
+            <li><strong>Density-Based:</strong> Groups violations based on actual density, not just distance</li>
+            <li><strong>Robust to Outliers:</strong> Outliers don't affect cluster formation</li>
+        </ul>
+        
+        <h3>How DBSCAN Works</h3>
+        <ol>
+            <li><strong>Core Points:</strong> A point is a core point if it has at least min_samples points within eps distance</li>
+            <li><strong>Border Points:</strong> Points within eps distance of a core point but with fewer than min_samples neighbors</li>
+            <li><strong>Noise Points:</strong> Points that are neither core nor border points</li>
+            <li><strong>Cluster Formation:</strong> All density-reachable points from a core point form a cluster</li>
+        </ol>
+        
+        <h3>Parameters</h3>
+        <pre><code>eps: 0.005 (epsilon - neighborhood radius in degrees)
+min_samples: 10 (minimum points required to form a cluster)</code></pre>
+        <p><strong>eps Selection:</strong> 0.005 degrees ≈ 550 meters in Bangalore latitude. This captures violations that are within walking distance of each other.</p>
+        <p><strong>min_samples Selection:</strong> 10 violations minimum ensures we only identify significant hotspots, not random coincidences.</p>
+        
+        <h3>Input Data</h3>
+        <p>Uses latitude and longitude coordinates from all parking violation reports (298,450 points after cleaning).</p>
+        
+        <h3>Output</h3>
+        <ul>
+            <li><strong>Cluster Labels:</strong> Each violation assigned a cluster ID (-1 for noise/outliers)</li>
+            <li><strong>Hotspot Coordinates:</strong> Centroid coordinates for each identified cluster</li>
+            <li><strong>Cluster Sizes:</strong> Number of violations in each hotspot</li>
+            <li><strong>Visualization:</strong> Spatial maps showing hotspot distribution</li>
+        </ul>
+        
+        <h3>Use Cases</h3>
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>Patrol Route Planning</h4>
+                <p>Officers can prioritize routes through identified hotspots</p>
+            </div>
+            <div class="feature-item">
+                <h4>Resource Allocation</h4>
+                <p>Deploy more officers to areas with dense violation clusters</p>
+            </div>
+            <div class="feature-item">
+                <h4>Infrastructure Planning</h4>
+                <p>Identify areas needing more parking infrastructure</p>
+            </div>
+            <div class="feature-item">
+                <h4>Trend Analysis</h4>
+                <p>Track how hotspots change over time</p>
+            </div>
+        </div>
+        
+        <h3>Implementation in Notebook</h3>
+        <div class="cell-explanation">
+            <h4>DBSCAN Cell</h4>
+            <p><strong>Code:</strong></p>
+            <pre><code>from sklearn.cluster import DBSCAN
+
+# Prepare coordinates
+coords = df[['latitude', 'longitude']].values
+
+# Apply DBSCAN
+dbscan = DBSCAN(eps=0.005, min_samples=10)
+clusters = dbscan.fit_predict(coords)
+
+# Add cluster labels to dataframe
+df['cluster'] = clusters
+
+# Analyze results
+n_clusters = len(set(clusters)) - (1 if -1 in clusters else 0)
+n_noise = list(clusters).count(-1)
+
+print(f"Number of clusters: {n_clusters}")
+print(f"Number of noise points: {n_noise}")</code></pre>
+            <p><strong>Output Interpretation:</strong></p>
+            <ul>
+                <li>Cluster ID -1 indicates noise/outliers (isolated violations)</li>
+                <li>Cluster IDs 0, 1, 2, etc. represent distinct hotspots</li>
+                <li>Hotspots with more points indicate chronic problem areas</li>
+            </ul>
+        </div>
+        
+        <h3>Visualization</h3>
+        <p>The notebook includes scatter plots showing:</p>
+        <ul>
+            <li>All violations colored by cluster</li>
+            <li>Hotspots highlighted with different colors</li>
+            <li>Noise points shown in gray</li>
+            <li>Geographic distribution across Bangalore</li>
+        </ul>
+        
+        <h3>Integration with Other Models</h3>
+        <p>Model 2 complements Models 1 and 3:</p>
+        <ul>
+            <li><strong>Model 1</strong> validates individual reports</li>
+            <li><strong>Model 2</strong> identifies spatial patterns and hotspots</li>
+            <li><strong>Model 3</strong> predicts priority for individual locations</li>
+            <li><strong>Combined:</strong> Officers get both individual report validation and spatial hotspot intelligence</li>
+        </ul>
+        
+        <h3>Performance Characteristics</h3>
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value">O(n log n)</div>
+                <div class="metric-label">Time Complexity</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">O(n)</div>
+                <div class="metric-label">Space Complexity</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">298k</div>
+                <div class="metric-label">Points Clustered</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="model3">
+        <h2>Model 3: Congestion Priority Predictor (Detailed)</h2>
+        
+        <h3>Purpose</h3>
+        <p>Multi-class classifier that predicts enforcement priority (LOW/MEDIUM/HIGH) based on ambient location and time features. Used for quick assessment when full violation details aren't available.</p>
+        
+        <h3>Algorithm</h3>
+        <p>LightGBM multi-class classifier with 3 output classes.</p>
+        
+        <h3>Feature Set (11 Features)</h3>
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>Spatial (2)</h4>
+                <p>latitude, longitude</p>
+            </div>
+            <div class="feature-item">
+                <h4>Temporal (4)</h4>
+                <p>hour_sin, hour_cos, dayofweek, is_weekend, month</p>
+            </div>
+            <div class="feature-item">
+                <h4>Area Density (3)</h4>
+                <p>police_station_freq, pincode_freq, junction_name_freq</p>
+            </div>
+            <div class="feature-item">
+                <h4>Reliability (2)</h4>
+                <p>user_target_enc, device_target_enc</p>
+            </div>
+        </div>
+        
+        <h3>Priority Mapping</h3>
+        <pre><code>0 → LOW: Minimal congestion impact
+1 → MEDIUM: Moderate impact, monitor
+2 → HIGH: Severe impact, immediate dispatch</code></pre>
+        
+        <h3>Use Case</h3>
+        <p>This model is designed for situations where officers have basic location and time information but lack detailed violation specifics. It provides a quick triage assessment to determine if immediate dispatch is warranted.</p>
+        
+        <h3>Training Data</h3>
+        <p>Trained on historical enforcement data where priority was determined based on actual congestion impact and officer response patterns.</p>
+    </div>
+
+    <div class="section" id="features">
+        <h2>Feature Engineering Details</h2>
+        
+        <h3>Cyclic Time Encoding</h3>
+        <p>Time is circular (23:00 is close to 00:00), but linear encoding treats them as far apart. Cyclic encoding using sine and cosine preserves this circular nature:</p>
+        <pre><code>hour_sin = sin(2 * π * hour / 24)
+hour_cos = cos(2 * π * hour / 24)</code></pre>
+        <p>This allows the model to understand that hour 23 and hour 0 are temporally close.</p>
+        
+        <h3>Target Encoding (Out-of-Fold)</h3>
+        <p>Standard target encoding causes data leakage. OOF prevents this:</p>
+        <ol>
+            <li>Split data into K folds</li>
+            <li>For each fold, calculate target encoding using only other K-1 folds</li>
+            <li>Apply encoding to validation fold</li>
+            <li>Repeat for all folds</li>
+        </ol>
+        <p>Laplace smoothing is applied: (count + smoothing * global_mean) / (total + smoothing)</p>
+        
+        <h3>Frequency Encoding</h3>
+        <p>High-cardinality categorical features (like police_station with 100+ values) are converted to their frequency counts. This captures density patterns without creating hundreds of dummy variables.</p>
+        
+        <h3>Interaction Features</h3>
+        <p>Feature interactions capture non-linear relationships:</p>
+        <ul>
+            <li><strong>hour_x_weekend:</strong> Captures that weekend evenings have different patterns than weekday evenings</li>
+            <li><strong>lat_x_lon:</strong> Captures spatial relationships</li>
+            <li><strong>hour_sin_x_cos:</strong> Captures complex temporal patterns</li>
+        </ul>
+        
+        <h3>Peak Hour Indicators</h3>
+        <p>Binary flags for known congestion periods:
+        <ul>
+            <li>Morning peak: 8-10 AM (commute hours)</li>
+            <li>Evening peak: 5-7 PM (commute hours)</li>
+        </ul>
+        These help the model learn that violations during these times have higher congestion impact.</p>
+    </div>
+
+    <div class="section" id="deployment">
+        <h2>Deployment Architecture</h2>
+        
+        <h3>Render Deployment</h3>
+        <p>The FastAPI backend is deployed on Render using the following configuration:</p>
+        <pre><code>services:
+  - type: web
+    name: parking-intelligence-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0</code></pre>
+        
+        <h3>Model Storage</h3>
+        <p>Models are stored as joblib files in the repository:
+        <ul>
+            <li>model_report_validator.joblib (55-feature model)</li>
+            <li>model_congestion_prioritizer.joblib (11-feature model)</li>
+            <li>ambient_features.json (Model 3 feature list)</li>
+        </ul>
+        
+        <h3>API Endpoints</h3>
+        <div class="endpoint">
+            <h4>Production URL</h4>
+            <p>https://parking-model.onrender.com</p>
+        </div>
+        
+        <h3>Frontend Deployment</h3>
+        <p>The HTML/CSS/JavaScript frontend can be deployed on Vercel as a static site. It communicates with the Render API using CORS-enabled requests.</p>
+        
+        <h3>Monitoring</h3>
+        <p>The /health endpoint provides real-time status monitoring. In production, this would be integrated with monitoring tools like Prometheus or Datadog.</p>
+        
+        <h3>Scaling</h3>
+        <p>Render automatically scales based on traffic. For high-volume production, additional optimizations would include:
+        <ul>
+            <li>Load balancing</li>
+            <li>Model caching in memory</li>
+            <li>Async request processing</li>
+            <li>Database for storing predictions</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Summary</h2>
+        <p>The Parking Intelligence backend represents a complete end-to-end ML pipeline:</p>
+        <ol>
+            <li><strong>Data Ingestion:</strong> CSV loading and cleaning</li>
+            <li><strong>Feature Engineering:</strong> 55 features with advanced techniques</li>
+            <li><strong>Model Training:</strong> LightGBM with hyperparameter tuning</li>
+            <li><strong>Semi-Supervised Learning:</strong> Pseudo-labeling for unlabeled data</li>
+            <li><strong>Model Serving:</strong> FastAPI with automatic documentation</li>
+            <li><strong>Deployment:</strong> Cloud hosting with automatic scaling</li>
+        </ol>
+        <p>The system achieves 80%+ accuracy on validation and provides real-time predictions through a modern REST API, transforming parking enforcement from reactive to data-driven operations.</p>
+    </div>
+</div>
+
+</body>
+</html>
